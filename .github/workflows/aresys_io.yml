@@ -219,12 +219,14 @@ jobs:
           packages-dir: dist
 
   publish_docs:
+    needs: [doc_build, publish]
     if: >
       ${{
+        !cancelled() &&
         (startsWith(github.ref_name, 'aresys-io-v') || startsWith(github.ref_name, 'docs-v')) &&
+        needs.doc_build.result == 'success' &&
         (needs.publish.result == 'success' || needs.publish.result == 'skipped')
       }}
-    needs: [doc_build, publish]
 
     runs-on: ubuntu-latest
 
